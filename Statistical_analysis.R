@@ -1,0 +1,254 @@
+# Statiscial analysis of the iris dataset
+#required packages
+
+install.packages('corrplot')
+install.packages('reshape2')
+
+# Import the data set
+data(iris)
+df <- iris
+# View the data set
+View(df)
+# First 10 rows of the data set
+head(df, 10)
+
+# Statistical summary of the data set
+summary(df)
+# Check the missing values
+is.na(df)
+
+# Checking the missing values in each column
+colSums(is.na(df))
+
+# View the number of rows and columns
+dim(df)
+
+# Print all columns names
+names(df)
+
+# Check all columns data types
+str(df)
+# Check the data types of each column
+sapply(df, class)
+# Check the number of unique values in each column
+sapply(df, function(x) length(unique(x)))
+
+# Check the values in species column
+unique(df$Species)
+
+# Check the number of values in species column
+table(df$Species)
+
+
+# two digram and chart
+# Histogram
+hist(df$Sepal.Length, col = "red", main = "Sepal Length", xlab = "Sepal Length", ylab = "Frequency")
+hist(df$Sepal.Width, col = "blue", main = "Sepal Width", xlab = "Sepal Width", ylab = "Frequency")
+hist(df$Petal.Length, col = "green", main = "Petal Length", xlab = "Petal Length", ylab = "Frequency")
+hist(df$Petal.Width, col = "yellow", main = "Petal Width", xlab = "Petal Width", ylab = "Frequency")
+
+
+# Now i will describe the data set and variables with using pie chart
+#cheak the species data overview and 
+
+pie(table(df$Species), main = 'Pie chart of species column',
+    col = c('green', 'blue','orange'), radius = 0.75)
+
+pie(table(df$Petal.Length), main = 'Pie chart of petal Length', radius = 1)
+
+# Boxplot
+boxplot(df$Sepal.Length, col = "red", main = "Sepal Length", xlab = "Sepal Length", ylab = "Frequency")
+boxplot(df$Sepal.Width, col = "blue", main = "Sepal Width", xlab = "Sepal Width", ylab = "Frequency") 
+boxplot(df$Petal.Length, col = "green", main = "Petal Length", xlab = "Petal Length", ylab = "Frequency")
+boxplot(df$Petal.Width, col = "yellow", main = "Petal Width", xlab = "Petal Width", ylab = "Frequency")
+
+
+# Checking the relationship with all variables
+plot(df, main = "Checking The relationship with variables",pch=20, col =c('purple','blue'))
+pairs(df)
+
+pairs(df[1:4], 
+      main = "Relations between variables in iris data", 
+      pch = 21, 
+      bg = c("pink", "green3", "blue2")[unclass(iris$Species)], 
+      lower.panel=NULL, 
+      labels = c("Sepal Length","Sepal Width","Petal Length","Petal Width"), 
+      font.labels = 2, 
+      cex.labels = 2)
+
+# Now we will check the correlation between the variables
+# Correlation is positive when the values of two variables increase together
+# Correlation is negative when the values of two variables decrease together
+
+# Pearson Correlations
+cor(df[1:4], method = "pearson")
+
+# Correlation matrix with heatmap
+library(reshape2)
+library(corrplot)
+library(ggplot2)
+library(RColorBrewer)
+melted <- melt(cor(df[,1:4]))
+
+ggplot(melted, aes(Var1, Var2, fill = value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low = "blue2", mid = "white", high = "green", midpoint = 0, 
+                       limit = c(-1,1), space = "Lab", name="Pearson Correlation") + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  coord_fixed()
+
+# Now i will check the covariance between the variables
+# Covariance is positive when the values of two variables increase together
+# Covariance is negative when the values of two variables decrease together
+
+# Covariance
+cov(df[1:4])
+
+# Now we check the coefficient of variation between 
+# variables
+# Sepal.Length
+sd(df$Sepal.Length)/mean(df$Sepal.Length)
+# Sepal.Width
+sd(df$Sepal.Width)/mean(df$Sepal.Width)
+# Petal.Length
+sd(df$Petal.Length)/mean(df$Petal.Length)
+# Petal.Width
+sd(df$Petal.Width)/mean(df$Petal.Width)
+
+# Now i checking the coefficient of determination
+# Coefficient of determination is a statistical measure of how well the regression line approximates 
+# the real data points
+# Coefficient of determination is always between 0 and 1
+# Coefficient of determination is 0 when the regression line is the same as the mean of the data
+# Coefficient of determination is 1 when the regression line is the same as the data points
+
+# Coefficient of determination
+cor(df[1:4])^2
+
+
+# Now we will check the least squares regression line
+# between variables
+# Sepal.Length and Petal.Length
+lm(df$Sepal.Length~df$Petal.Length)
+# Sepal.Length and Petal.Width
+lm(df$Sepal.Length~df$Petal.Width)
+# Sepal.Width and Petal.Length
+lm(df$Sepal.Width~df$Petal.Length)
+# Sepal.Width and Petal.Width
+lm(df$Sepal.Width~df$Petal.Width)
+# Petal.Length and Petal.Width
+lm(df$Petal.Length~df$Petal.Width)
+# Petal.Length and Species
+lm(df$Petal.Length~df$Species)
+# Petal.Width and Species
+lm(df$Petal.Width~df$Species)
+
+
+
+# Now we will check the linear regression line
+# between variables
+# Petal.Length and Petal.Width
+
+p <- lm(Petal.Width ~ Petal.Length, data=iris)
+
+plot(iris$Petal.Length, iris$Petal.Width, 
+     pch = 21,  cex=1.5,
+     xlab = "Petal Length",
+     ylab = "Petal Width",
+     main = "Positive linear relationship between petal length and width",
+     bg = c("firebrick1", "green3", "royalblue2")[unclass(iris$Species)]) 
+
+abline(p, col="black")
+
+
+# positive linear relationship between
+# Sepal.Length and Petal.Length
+
+p <- lm(Petal.Length ~ Sepal.Length, data=iris)
+plot(iris$Sepal.Length, iris$Petal.Length, 
+     pch = 21,  cex=1.5,
+     xlab = "Sepal Length",
+     ylab = "Petal Length",
+     main = "positive linear relationship between sepal length and petal length",
+     bg = c("firebrick1", "green3", "royalblue2")[unclass(iris$Species)])
+
+abline(p, col="black")
+
+# negative linear relationship between 
+# Sepal.Length and Sepal.Width
+
+p <- lm(Sepal.Width ~ Sepal.Length, data=iris) 
+plot(iris$Sepal.Length, iris$Sepal.Width, 
+     pch = 21,  cex=1.5,
+     xlab = "Sepal Length",
+     ylab = "Sepal Width",
+     main = "Negative linear relationship between sepal length and width",
+     bg = c("firebrick1", "green3", "royalblue2")[unclass(iris$Species)])
+
+abline(p, col="black")
+
+
+#z score of sepal length
+SL_mean <- mean(df$Sepal.Length)
+SL_mean
+
+SL_std<- sd(df$Sepal.Length)
+SL_std
+
+SL_z_score <- (df$Sepal.Length - SL_mean)/SL_std
+SL_z_score
+
+#plot of z scores sepal length
+plot(SL_z_score,xlab ='Sepal.length', type = 'o', col ='blue')
+
+#z score of sepal Width
+
+SW_mean <- mean(df$Sepal.Width)
+SW_mean
+
+SW_std <- sd(df$Sepal.Width)
+SW_std
+
+SW_z_score <- (df$Sepal.Width - SW_mean)/SW_std
+SW_z_score
+
+#plot of sepal Width  z scores
+plot(SW_z_score,xlab ='Sepal.Width', type = 'o', col ='red')
+
+#z score of petal length
+PL_mean <- mean(df$Petal.Length)
+PL_mean
+
+PL_std <- sd(df$Petal.Length)
+PL_std
+
+PL_z_score <- (df$Petal.Length -PL_mean)/PL_std
+PL_z_score
+
+#plot of petal length z score
+plot(PL_z_score,xlab = 'Petal Length', type = 'o', col='Pink')
+
+#Petal width z scores
+PW_mean <-mean(df$Petal.Width)
+PW_mean
+
+PW_std <- sd(df$Petal.Width)
+PW_std
+
+PW_z_scores <-(df$Petal.Width - PW_mean)/PW_std
+PW_z_scores
+
+plot(PW_z_scores,xlab = 'Petal Width', type='o', col = 'Purple')
+
+
+#find z score 
+iris_df <- df[,1:4]
+head(iris_df)
+#use scale function for standardize variable of dataframe
+iris_z_score <- scale(iris_df)
+iris_z_score
+
+
+
+

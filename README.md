@@ -4,7 +4,7 @@
 
 This project involves the statistical analysis of the MNIST dataset using R. The MNIST dataset is a large database of handwritten digits that is commonly used for training various image processing systems. It consists of 60,000 training images and 10,000 testing images, each of size 28x28 pixels.
 
-## Overview
+## Overviews
 
 In this project, we aim to perform the following tasks:
 

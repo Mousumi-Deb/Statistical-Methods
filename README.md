@@ -2,7 +2,6 @@
 
 This R programming project focuses on performing statistical analysis on the famous Iris dataset. The dataset consists of 150 samples of iris flowers, each with four features: sepal length, sepal width, petal length, and petal width, along with the species label.
 
-![Iris Dataset](iris.jpg)
 
 ## Features:
 
